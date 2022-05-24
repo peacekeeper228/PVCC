@@ -6,10 +6,8 @@ import re
 import json
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-#from simple_elmo import ElmoModel
-#model = ElmoModel()
+import pandas as pd
 PATH_TO_ELMO='E:\MIEM\IOD_seminars\model.bin'
-#model.load(PATH_TO_ELMO)
 
 class Normalizer:
     conv_pos = {'ADJF':'ADJ', 'ADJS':'ADJ', 'ADV':'ADV', 'NOUN':'NOUN', 
@@ -44,11 +42,10 @@ class Normalizer:
 test1=Normalizer()   
 model_w2v = KeyedVectors.load_word2vec_format(PATH_TO_ELMO, binary=True)
 
-with open('data_SAPR.json') as f:
+with open('lab4/data.json') as f:
     d = json.load(f)
-index2word_set = list(model_w2v.index_to_key)
-
-#print(model.get_elmo_vectors(d))
+    d1 = pd.DataFrame({'news':d})
+index2word_set = set(model_w2v.index_to_key)
 
     
 def text_to_vec(text):
@@ -59,10 +56,8 @@ def text_to_vec(text):
         if word in index2word_set:
             n_words = n_words + 1
             text_vec = np.add(text_vec, model_w2v[word]) 
-
     if n_words != 0:
         text_vec /= n_words
     return text_vec
-
-w2v_vectors = [text_to_vec(text) for text in tqdm(d)]
+w2v_vectors = [text_to_vec(text) for text in tqdm(d1['news'])]
 np.save('lab4/ArticlesVectors', w2v_vectors)
