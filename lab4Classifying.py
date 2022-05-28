@@ -18,7 +18,7 @@ for _ in range(100):
     model = buildModel()
     model.fit(X_train,y_train)
     res=model.predict(X_test)
-    accuracy=f1_score(res, y_test)
+    accuracy=f1_score(res, y_test,average='micro')
     if accuracy>maxAccuracy:
         maxAccuracy=accuracy
         params=model.get_params()
@@ -31,6 +31,5 @@ print('Итоговая точность: {:4.2f}%'.format(precision_score(res, 
 print('Итоговая полнота: {:4.2f}%'.format(recall_score(res, y_test)*100))
 print('Итоговая метрика f1: {:4.2f}%'.format(f1_score(res, y_test)*100))
 
-# Save to file in the current working directory
 joblib_file = "lab4/model.pkl"
 joblib.dump(modelRes, joblib_file)
